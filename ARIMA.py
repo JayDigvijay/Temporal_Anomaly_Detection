@@ -7,7 +7,7 @@ Created on Mon Oct 19 12:22:56 2020
 
 import matplotlib.pyplot as plt
 #from pandas.plotting import autocorrelation_plot
-from statsmodels.tsa.arima_model import ARIMA
+from statsmodels.tsa.arima.model import ARIMA
 from sklearn.metrics import mean_squared_error
 from Parameters import pickle_read, D, T
 
@@ -25,13 +25,17 @@ for t in range(len(test)):
     obs = test[t]
     history.append(obs)
     model = ARIMA(history, order=(5,1,0))
-    model_fit = model.fit(disp=0)
+    model_fit = model.fit()
     output = model_fit.forecast()
     yhat = output[0]
     predictions.append(yhat)
     if (len(history) > N):
         history.pop(0)
-    
+    plt.plot(range(t + 1), predictions, c = 'b', linewidth = 6)
+    plt.plot(range(t + 1), test[:t+1], c = 'r', linewidth = 3)
+    plt.show(block = False)
+    plt.pause(0.1)
+    plt.clf()
     print('predicted=%f, expected=%f' % (yhat, obs))
 error = mean_squared_error(test, predictions)
 print('Test MSE: %.3f' % error)

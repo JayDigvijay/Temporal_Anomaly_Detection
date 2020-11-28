@@ -14,7 +14,7 @@ T = Time period in hours between model training. The readings taken in this
 period (at 15 minute intervals) are aggregated to increase reliability.
 '''
 
-D = 1
+D = 10
 '''
 D = Number of days whose data is considered while generating the model
 '''
