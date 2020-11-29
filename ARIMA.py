@@ -9,46 +9,41 @@ import matplotlib.pyplot as plt
 #from pandas.plotting import autocorrelation_plot
 from statsmodels.tsa.arima.model import ARIMA
 from sklearn.metrics import mean_squared_error
-from Parameters import pickle_read, D, T
-
-N = int((D*24)/(T))
-F = 100
- 
-"""
-N = Number of observations on which model to be trained
-F = Number of observations to be predicted
-"""
-X = pickle_read('Ozone.pickle')
+from Parameters import pickle_read, D, T, N, F
+import time
 
 
-train, test = X[0:N], X[N:len(X)]
-history = [x for x in train]
-predictions = list()
+def ARIMA_Predict(filename):
+    start = time.time()
+    X = pickle_read(filename)
+    train, test = X[:N], X[N:]
+    history = train
+    print(len(history))
+    predictions = list()
 
-for t in range(F):
-    obs = test[t]
-    history.append(obs)
-    model = ARIMA(history, order=(5,1,0))
-    model_fit = model.fit()
-    output = model_fit.forecast()
-    yhat = output[0]
-    predictions.append(yhat)
-    if (len(history) > N):
-        history.pop(0)
-    plt.plot(range(t + 1), predictions, c = 'b', linewidth = 6)
-    plt.plot(range(t + 1), test[:t+1], c = 'r', linewidth = 3)
-    plt.show(block = False)
-    plt.pause(0.1)
-    plt.clf()
-    print('predicted=%f, expected=%f' % (yhat, obs))
-error = mean_squared_error(test[:F], predictions)
-print('Test MSE: %.3f' % error)
-# plot
-'''
-plt.plot(test)
-plt.plot(predictions, color='red')
-plt.show()
-'''
+    for t in range(F):
+        obs = test[t]
+        history.append(obs)
+        model = ARIMA(history, order=(5,1,0))
+        model_fit = model.fit()
+        output = model_fit.forecast()
+        yhat = output[0]
+        predictions.append(yhat)
+        if (len(history) > N):
+            history.pop(0)
+        plt.plot(range(t + 1), predictions, c = 'b', linewidth = 6)
+        plt.plot(range(t + 1), test[:t+1], c = 'r', linewidth = 3)
+        plt.show(block = False)
+        plt.pause(0.1)
+        plt.clf()
+        print("MAE = ", abs((obs-yhat)))
+        print('predicted=%f, expected=%f' % (yhat, obs))
+    error = mean_squared_error(test[:F], predictions)
+    print('Test MSE: %.3f' % error)
+    print("Time = ", time.time() - start)
+
+if __name__ == "__main__":
+    ARIMA_Predict('Dataset/CarbMonox1.pickle')
 
 
 

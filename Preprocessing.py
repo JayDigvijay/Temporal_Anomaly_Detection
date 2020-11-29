@@ -8,19 +8,19 @@ import pandas as pd
 from Parameters import T , pickle_write
 
 
-data = pd.read_csv('Dataset/pollutionData180926.csv')
-location_num = '1'
-#Gas = list(data['ozone'])
+data = pd.read_csv('Dataset/pollutionData201561.csv')
+location_num = '5'
+Gas = list(data['ozone'])
 #Gas = list(data['particullate_matter'])
 #Gas = list(data['carbon_monoxide'])
 #Gas = list(data['sulfure_dioxide'])
-Gas = list(data['nitrogen_dioxide'])
+#Gas = list(data['nitrogen_dioxide'])
 
-#gas_name = 'Ozone'
+gas_name = 'Ozone'
 #gas_name = 'PM'
 #gas_name = 'CarbMonox'
 #gas_name = 'SulphDiox'
-gas_name = 'NitDiox'
+#gas_name = 'NitDiox'
 Aggregate_Values = list()
 k = 4*T
 i = 0

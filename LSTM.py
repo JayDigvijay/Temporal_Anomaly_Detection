@@ -28,7 +28,7 @@ def LSTM_Predict(filename):
     Data = [(i/scaler) for i in raw]
 
     train, test = Data[:N], Data[N:]
-    n = int(N/10) # Number of data points to use for prediction
+    n = int(N/120) # Number of data points to use for prediction
     history = train[-n:]
     predictions = list()
     observations = list()   
@@ -36,7 +36,7 @@ def LSTM_Predict(filename):
     X, Y = split_sequence(train, n)
     X = X.reshape((X.shape[0], X.shape[1], n_features))
     model = Sequential()
-    model.add(LSTM(20, activation='tanh', return_sequences = True, input_shape=(n, n_features)))
+    model.add(LSTM(5, activation='tanh', return_sequences = True, input_shape=(n, n_features)))
     #model.add(LSTM(50, activation='relu', return_sequences = True))
     model.add(Dropout(0.1))
     model.add(Dense(1, activation='tanh'))
@@ -45,25 +45,26 @@ def LSTM_Predict(filename):
     model.fit(X, Y, epochs=100, verbose=1, validation_split = 0.1)
 
     for t in range(F): 
-        pd = np.array(history)
-        pd = pd.reshape((1, n, n_features))
-        out = model.predict(pd, verbose=0)[0][0][0]
-        pred = scaler * out
-        print(out.shape)
-        if t >= n:
-            obs = scaler * test[t - n]
-            predictions.append(pred)
-            plt.plot(range(t + 1 - n), predictions, c = 'g', linewidth = 6)
-            observations.append(obs)
-            print("Expected: ",obs, " Predicted: ",pred)
-            print("MAE = ", abs((obs-pred)))
-            plt.plot(range(t + 1 - n), observations, c = 'r', linewidth = 3)
-            plt.show(block = False)
-            plt.pause(0.1)
-            plt.clf()
         history.append(test[t])
         if (len(history) > n):
             history.pop(0)
+        pd = np.array(history)
+        pd = pd.reshape((1, n, n_features))
+        out = model.predict(pd, verbose=0)[0][n-1][0]
+        pred = scaler * out
+        #print(out.shape)
+        
+        obs = scaler * test[t]
+        predictions.append(pred)
+        plt.plot(range(t + 1), predictions, c = 'g', linewidth = 6)
+        observations.append(obs)
+        print("Expected: ",obs, " Predicted: ",pred)
+        print("MAE = ", abs((obs-pred)))
+        plt.plot(range(t + 1), observations, c = 'r', linewidth = 3)
+        plt.show(block = False)
+        plt.pause(0.1)
+        plt.clf()
+        
 
     #L = len(observations)
     error = mean_squared_error(observations, predictions)
@@ -73,4 +74,4 @@ def LSTM_Predict(filename):
 
 
 if __name__ == "__main__":
-    LSTM_Predict('Dataset/NitDiox1.pickle')
+    LSTM_Predict('Dataset/CarbMonox1.pickle')

@@ -23,10 +23,10 @@ N = int((D*24)/(T))
 """
 N = Number of observations on which model to be trained
 """
-n_predict = 100
-F = 24 + n_predict
+
+F = 100
 """
-n_predict = Number of observations to predict
+F = Number of observations to predict
 """
 ###############################################################################
 
