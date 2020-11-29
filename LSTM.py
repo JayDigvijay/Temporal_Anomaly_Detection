@@ -19,9 +19,8 @@ from keras import backend as K
 import keras
 import time
 
-
 def LSTM_Predict(filename):
-    start = time.time()
+    #start = time.time()
     n_features = 1
     raw = pickle_read(filename)
     scaler = max(raw)
@@ -42,7 +41,7 @@ def LSTM_Predict(filename):
     model.add(Dense(1, activation='tanh'))
     optimizer = keras.optimizers.Adam(lr=0.05)
     model.compile(optimizer=optimizer, loss='mse')
-    model.fit(X, Y, epochs=100, verbose=1, validation_split = 0.1)
+    model.fit(X, Y, epochs=50, verbose=1, validation_split = 0.1)
 
     for t in range(F): 
         history.append(test[t])
@@ -60,18 +59,17 @@ def LSTM_Predict(filename):
         observations.append(obs)
         print("Expected: ",obs, " Predicted: ",pred)
         print("MAE = ", abs((obs-pred)))
+        """
         plt.plot(range(t + 1), observations, c = 'r', linewidth = 3)
         plt.show(block = False)
         plt.pause(0.1)
         plt.clf()
+        """
         
-
-    #L = len(observations)
     error = mean_squared_error(observations, predictions)
-    print('Test MSE: %.3f' % error)
-    #shifting = N
-    print("Time = ", time.time() - start)
-
+    print('Prediction MSE: %.3f' % error)
+    #print("Time = ", time.time() - start)
+    
 
 if __name__ == "__main__":
     LSTM_Predict('Dataset/CarbMonox1.pickle')
