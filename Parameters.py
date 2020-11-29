@@ -19,6 +19,15 @@ D = 10
 D = Number of days whose data is considered while generating the model
 '''
 
+N = int((D*24)/(T))
+"""
+N = Number of observations on which model to be trained
+"""
+n_predict = 100
+F = 24 + n_predict
+"""
+n_predict = Number of observations to predict
+"""
 ###############################################################################
 
 

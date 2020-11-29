@@ -11,17 +11,21 @@ from statsmodels.tsa.arima.model import ARIMA
 from sklearn.metrics import mean_squared_error
 from Parameters import pickle_read, D, T
 
-N = int((D*24)/(T)) 
+N = int((D*24)/(T))
+F = 100
+ 
 """
 N = Number of observations on which model to be trained
+F = Number of observations to be predicted
 """
 X = pickle_read('Ozone.pickle')
+
 
 train, test = X[0:N], X[N:len(X)]
 history = [x for x in train]
 predictions = list()
 
-for t in range(len(test)):
+for t in range(F):
     obs = test[t]
     history.append(obs)
     model = ARIMA(history, order=(5,1,0))
@@ -37,7 +41,7 @@ for t in range(len(test)):
     plt.pause(0.1)
     plt.clf()
     print('predicted=%f, expected=%f' % (yhat, obs))
-error = mean_squared_error(test, predictions)
+error = mean_squared_error(test[:F], predictions)
 print('Test MSE: %.3f' % error)
 # plot
 '''

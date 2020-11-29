@@ -9,13 +9,18 @@ from Parameters import T , pickle_write
 
 
 data = pd.read_csv('Dataset/pollutionData180926.csv')
-Gas = list(data['ozone'])
+location_num = '1'
+#Gas = list(data['ozone'])
 #Gas = list(data['particullate_matter'])
-#Gas = input(data['carbon_monoxide'])
-#Gas = input(data['sulfure_dioxide'])
-#Gas = input(data['nitrogen_dioxide'])
+#Gas = list(data['carbon_monoxide'])
+#Gas = list(data['sulfure_dioxide'])
+Gas = list(data['nitrogen_dioxide'])
 
-gas_name = 'Ozone'
+#gas_name = 'Ozone'
+#gas_name = 'PM'
+#gas_name = 'CarbMonox'
+#gas_name = 'SulphDiox'
+gas_name = 'NitDiox'
 Aggregate_Values = list()
 k = 4*T
 i = 0
@@ -26,4 +31,4 @@ while (i < len(Gas)):
     Aggregate_Values.append(agg/4)
     i += k
     
-pickle_write(Aggregate_Values, (gas_name + '.pickle'))
+pickle_write(Aggregate_Values, ('Dataset/' + gas_name + location_num + '.pickle'))
