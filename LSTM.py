@@ -18,6 +18,8 @@ import matplotlib.pyplot as plt
 from keras import backend as K
 import keras
 import time
+from matplotlib.ticker import FormatStrFormatter
+import seaborn as sns
 
 def LSTM_Predict(filename):
     #start = time.time()
@@ -35,7 +37,7 @@ def LSTM_Predict(filename):
     X, Y = split_sequence(train, n)
     X = X.reshape((X.shape[0], X.shape[1], n_features))
     model = Sequential()
-    model.add(LSTM(5, activation='tanh', return_sequences = True, input_shape=(n, n_features)))
+    model.add(LSTM(4, activation='tanh', return_sequences = True, input_shape=(n, n_features)))
     #model.add(LSTM(50, activation='relu', return_sequences = True))
     model.add(Dropout(0.1))
     model.add(Dense(1, activation='tanh'))
@@ -68,8 +70,24 @@ def LSTM_Predict(filename):
         
     error = mean_squared_error(observations, predictions)
     print('Prediction MSE: %.3f' % error)
+    """
+    x = np.linspace(1, t+1, t+1)
+    sns.lineplot(x, predictions, color = 'g', linewidth = 6, label = "Predicted")
+    hist = sns.lineplot(x, observations, color = 'r', linewidth = 3, label = "Observed")
+    plt.rc('grid', linestyle="-", color='black')
+    hist.set_yticklabels(hist.get_yticks(), size = 20, weight = 'bold')
+    hist.set_xticklabels(hist.get_xticks(), size = 20,  weight = 'bold')
+    hist.yaxis.set_major_formatter(FormatStrFormatter('%.1f'))
+    hist.set_xlabel("Time (hours)",fontsize=30, weight = 'bold')
+    SUB = str.maketrans("0123456789", "₀₁₂₃₄₅₆₇₈₉")
+    hist.set_ylabel("O3 Level".translate(SUB),fontsize=30, weight = 'bold')
+    plt.legend(fontsize = 30, bbox_to_anchor=(0, -0.45, 1, 0), loc='lower left',ncol = 3, mode="expand", borderaxespad=0.)
+    plt.grid(True)
+    plt.show()
+    """
+    return error
     #print("Time = ", time.time() - start)
     
 
 if __name__ == "__main__":
-    LSTM_Predict('Dataset/CarbMonox1.pickle')
+    MSE = LSTM_Predict('Dataset/Ozone1.pickle')
