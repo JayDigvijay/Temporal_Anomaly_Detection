@@ -38,7 +38,7 @@ def LSTM_Predict(filename):
     X = X.reshape((X.shape[0], X.shape[1], n_features))
     model = Sequential()
     model.add(LSTM(4, activation='tanh', return_sequences = True, input_shape=(n, n_features)))
-    #model.add(LSTM(50, activation='relu', return_sequences = True))
+    model.add(LSTM(4, activation='tanh', return_sequences = True))
     model.add(Dropout(0.1))
     model.add(Dense(1, activation='tanh'))
     optimizer = keras.optimizers.Adam(lr=0.05)
